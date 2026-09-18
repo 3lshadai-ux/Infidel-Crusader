@@ -1,0 +1,26 @@
+# Godot 4+ generated / local
+.godot/
+.import/
+export.cfg
+export_credentials.cfg
+*.translation
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.vscode/
+.idea/
+*.import.bak
+
+# Android / export artifacts
+*.apk
+*.aab
+*.so
+android/
+
+# Local secrets
+local.properties
+*.keystore
+*.jks
