@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=3 uid="uid://bqjoy001ic"]
+
+[ext_resource type="Script" path="res://scripts/virtual_joystick.gd" id="1_joy"]
+
+[node name="VirtualJoystick" type="Control"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 3
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = -224.0
+offset_right = 224.0
+offset_bottom = -24.0
+grow_vertical = 0
+script = ExtResource("1_joy")
+
+[node name="Base" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 160.0
+offset_bottom = 160.0
+modulate = Color(1, 1, 1, 0.45)
+
+[node name="Knob" type="Panel" parent="Base"]
+layout_mode = 0
+offset_left = 55.0
+offset_top = 55.0
+offset_right = 105.0
+offset_bottom = 105.0
+modulate = Color(1, 1, 1, 0.75)
