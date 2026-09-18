@@ -19,34 +19,34 @@ mouse_filter = 2
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 16.0
-offset_top = 12.0
-offset_right = -16.0
-offset_bottom = 48.0
+offset_left = 12.0
+offset_top = 8.0
+offset_right = -12.0
+offset_bottom = 44.0
 grow_horizontal = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 16
 
 [node name="CashLabel" type="Label" parent="Root/TopBar"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.9, 0.5, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 16
 text = "Cash: $0"
 
 [node name="StatusLabel" type="Label" parent="Root/TopBar"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 16
 text = "Status: Fishmonger"
 
 [node name="LevelLabel" type="Label" parent="Root/TopBar"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.6, 0.85, 1, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 16
 text = "Level: 0"
 
 [node name="MiraclesLabel" type="Label" parent="Root/TopBar"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 1, 0.7, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 16
 text = "Miracles: 0/8"
 
 [node name="MissionPanel" type="PanelContainer" parent="Root"]
@@ -54,18 +54,45 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -300.0
-offset_top = 52.0
-offset_right = 300.0
-offset_bottom = 108.0
+offset_left = -280.0
+offset_top = 48.0
+offset_right = 280.0
+offset_bottom = 110.0
 grow_horizontal = 2
 
 [node name="MissionLabel" type="Label" parent="Root/MissionPanel"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 14
 text = "Find Jesus at the fish market, then follow Him."
 horizontal_alignment = 1
-autowrap_mode = 2
+autowrap_mode = 3
+
+[node name="CluePanel" type="PanelContainer" parent="Root"]
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -320.0
+offset_top = 120.0
+offset_right = -12.0
+offset_bottom = 260.0
+grow_horizontal = 0
+
+[node name="Margin" type="MarginContainer" parent="Root/CluePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
+
+[node name="ClueLabel" type="RichTextLabel" parent="Root/CluePanel/Margin"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+theme_override_font_sizes/normal_font_size = 14
+text = "Clue"
 
 [node name="CompletePanel" type="PanelContainer" parent="Root"]
 visible = false
@@ -105,19 +132,20 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -160.0
-offset_top = -170.0
-offset_right = 160.0
-offset_bottom = -110.0
+offset_left = -200.0
+offset_top = -200.0
+offset_right = 200.0
+offset_bottom = -120.0
 grow_horizontal = 2
 grow_vertical = 0
 
 [node name="LevelUpLabel" type="Label" parent="Root/LevelUpPanel"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
 text = "LEVEL UP"
 horizontal_alignment = 1
+autowrap_mode = 3
 
 [node name="ScripturePanel" type="PanelContainer" parent="Root"]
 visible = false
@@ -127,10 +155,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -320.0
-offset_top = -140.0
-offset_right = 320.0
-offset_bottom = 140.0
+offset_left = -340.0
+offset_top = -160.0
+offset_right = 340.0
+offset_bottom = 160.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -144,10 +172,12 @@ theme_override_colors/font_color = Color(0.85, 0.75, 0.4, 1)
 theme_override_font_sizes/font_size = 18
 text = "Matthew 4:19 (KJV)"
 horizontal_alignment = 1
+autowrap_mode = 3
 
 [node name="QuoteLabel" type="Label" parent="Root/ScripturePanel/VBox"]
+custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 17
 text = "Scripture"
 horizontal_alignment = 1
 autowrap_mode = 3
@@ -159,9 +189,9 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -220.0
-offset_top = 120.0
+offset_top = 116.0
 offset_right = 220.0
-offset_bottom = 180.0
+offset_bottom = 176.0
 grow_horizontal = 2
 
 [node name="MajorLabel" type="Label" parent="Root/MajorBeatPanel"]
@@ -170,5 +200,150 @@ theme_override_colors/font_color = Color(1, 0.85, 0.35, 1)
 theme_override_font_sizes/font_size = 18
 text = "MAJOR STORY BEAT"
 horizontal_alignment = 1
+
+[node name="PuzzlePanel" type="PanelContainer" parent="Root"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -150.0
+offset_right = 300.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Root/PuzzlePanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="PromptLabel" type="Label" parent="Root/PuzzlePanel/VBox"]
+custom_minimum_size = Vector2(560, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Puzzle prompt"
+autowrap_mode = 3
+
+[node name="AnswerInput" type="LineEdit" parent="Root/PuzzlePanel/VBox"]
+layout_mode = 2
+placeholder_text = "Your answer..."
+
+[node name="HintLabel" type="Label" parent="Root/PuzzlePanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.75, 0.7, 1)
+theme_override_font_sizes/font_size = 12
+text = "Hint"
+autowrap_mode = 3
+
+[node name="FeedbackLabel" type="Label" parent="Root/PuzzlePanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = ""
+horizontal_alignment = 1
+
+[node name="ButtonRow" type="HBoxContainer" parent="Root/PuzzlePanel/VBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 16
+
+[node name="SubmitButton" type="Button" parent="Root/PuzzlePanel/VBox/ButtonRow"]
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+text = "Submit"
+
+[node name="CloseButton" type="Button" parent="Root/PuzzlePanel/VBox/ButtonRow"]
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+text = "Close"
+
+[node name="JournalPanel" type="PanelContainer" parent="Root"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = -220.0
+offset_right = 320.0
+offset_bottom = 220.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Margin" type="MarginContainer" parent="Root/JournalPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox" type="VBoxContainer" parent="Root/JournalPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="JournalText" type="RichTextLabel" parent="Root/JournalPanel/Margin/VBox"]
+custom_minimum_size = Vector2(600, 360)
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+scroll_active = true
+theme_override_font_sizes/normal_font_size = 13
+text = "Journal"
+
+[node name="CloseJournal" type="Button" parent="Root/JournalPanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "Close Journal"
+
+[node name="HintLabel" type="Label" parent="Root"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -260.0
+offset_top = -100.0
+offset_right = 260.0
+offset_bottom = -72.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.7, 1)
+theme_override_font_sizes/font_size = 14
+text = "Hint"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="BottomBar" type="HBoxContainer" parent="Root"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -280.0
+offset_top = -88.0
+offset_right = -16.0
+offset_bottom = -24.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/separation = 12
+alignment = 2
+
+[node name="JournalButton" type="Button" parent="Root/BottomBar"]
+custom_minimum_size = Vector2(110, 56)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Journal"
+
+[node name="InteractButton" type="Button" parent="Root/BottomBar"]
+custom_minimum_size = Vector2(120, 56)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Interact"
 
 [node name="VirtualJoystick" parent="Root" instance=ExtResource("2_joy")]
