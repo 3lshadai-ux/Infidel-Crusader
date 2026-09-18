@@ -2,118 +2,114 @@
 
 **Genre:** GTA-like open-world action sandbox for mobile  
 **Engine:** Godot 4.3+ (Android export target)  
-**Status:** Playable slice MVP — not a full GTA clone
+**Status:** Level 1 playable pass - Follow Me + full Water-to-Wine showcase + other miracles/major beats hooked
 
-A stylized, fictional New Testament–era coastal open world. You begin as a **fishmonger** at the market/docks. The opening calling: encounter Jesus, **follow Him**, and become a **Disciple**. Later miracles and major story beats advance Level 1 campaign progress.
+A stylized, fictional New Testament-era coastal open world. You begin as a **fishmonger** at the market/docks. The opening calling: encounter Jesus, **follow Him**, and become a **Disciple**. Then travel the map for miracles and major story beats.
 
-Tone: respectful of the Gospels’ calling-of-disciples narrative inside a sandbox game frame. Title is edgy; content and code stay professional. Fiction/sandbox — no real-world targeting or calls to real violence.
+Tone: respectful of the Gospels inside a sandbox game frame. Title is edgy; content and code stay professional. Fiction/sandbox - no real-world targeting or calls to real violence.
 
 ---
 
-## What this MVP includes
+## What is playable now (desktop F5 / Android)
 
-| Feature | In MVP? |
-|--------|---------|
-| 3D coastal city blockout (market, dusty streets, docks, water) | Yes |
-| Third-person on-foot controller + camera follow | Yes |
-| Virtual joystick (touch) + WASD (desktop) | Yes |
-| Opening mission: follow Jesus → Disciple | Yes (playable) |
-| Cash HUD + status + mission clue | Yes |
-| **Leveling:** `player_level` = miracles/beats completed | Yes |
-| Miracle campaign data + clues unlock chain | Yes (data + first beat playable) |
-| KJV scripture overlay + `DisplayServer.tts_speak` | Yes |
-| **Major beats:** Transfiguration, Gethsemane, Crucifixion | Data + UI flags (set-piece gameplay stubbed) |
-| Vehicles / wanted system / huge map / multiplayer | Roadmap only |
+| Feature | Status |
+|--------|--------|
+| 3D ancient-Israel blockout (roads, pads, signposts) | **Playable** |
+| Third-person controller + virtual joystick | **Playable** |
+| **Follow Me** - stay near Jesus on the shore path | **Playable** |
+| **Water to Wine (Cana)** - multi-clue -> puzzle -> miracle | **Playable (showcase)** |
+| Nets Overflow / Calm the Storm / Loaves and Fish | **Playable** (clue + riddle + witness) |
+| * Transfiguration (Tabor climb + light) | **Playable** set-piece |
+| * Gethsemane (keep-watch timer) | **Playable** set-piece |
+| * Crucifixion (Golgotha climax) | **Playable** set-piece |
+| Journal / clue panel / puzzle dialog / level-up toast | **Yes** |
+| KJV overlay + `DisplayServer.tts_speak` | **Yes** |
+| Vehicles / wanted / huge GIS map / multiplayer | Roadmap only |
 
-### Progression scheme
+### Water to Wine showcase (first post-disciple miracle)
 
-- Start: **Fishmonger**, Level **0**, Miracles **0/N**
-- Each completed miracle/beat: `player_level += 1`, level-up toast, unlock next clue, KJV read-aloud
-- Titles update at milestones (Disciple → Witness → Apostle → Witness of the Cross)
+1. Finish **Follow Me** -> unlocks Cana.
+2. Follow signposts inland to the **Cana** marker (purple-tinted pillar / blue encounter beacon).
+3. Approach to reveal **multi-step clues** in the clue panel + journal.
+4. **Puzzle gate:** answer the waterpots riddle (**6**) *or* walk to each of the six jars and press **E / Interact** to fill them.
+5. Enter **miracle** phase -> Interact to participate/observe.
+6. **KJV overlay + TTS**, level-up toast, next miracle unlocks.
+
+### Progression
+
+- Start: **Fishmonger**, Level **0**, Miracles **0/8**
+- Each completed entry: `player_level += 1`, cash reward, status title, next unlock
+- Miracle states: `locked -> clues -> puzzle -> miracle -> done`
+- `GameState` remains the source of truth (`clues`, `puzzle`, `state`)
 
 ### Level 1 story arc (ordered)
 
-1. **Follow Me** — fishmonger → disciple (playable)
-2. Nets Overflow
-3. Water to Wine
-4. Calm the Storm
-5. Loaves and Fish
-6. ★ **The Transfiguration** — major mid/late beat
-7. ★ **Garden of Gethsemane** — major beat before the end
-8. ★ **The Crucifixion** — Level 1 climax / ending
+1. **Follow Me** - fishmonger -> disciple (**playable**)
+2. **Water to Wine** - Cana showcase (**playable**, full clue->puzzle->miracle)
+3. Nets Overflow (**playable** loop)
+4. Calm the Storm (**playable** loop)
+5. Loaves and Fish (**playable** loop)
+6. * **The Transfiguration** (**playable** set-piece)
+7. * **Garden of Gethsemane** (**playable** keep-watch)
+8. * **The Crucifixion** - Level 1 climax (**playable**)
 
-### World map — stylized ancient Israel
+### World map - stylized ancient Israel
 
-Open-world blockout is **not** GIS-accurate; it is a readable NT-era travel fantasy with labeled places.
+Readable travel fantasy (not GIS-accurate): clearer roads **Galilee -> Cana -> Nazareth -> Tabor -> south** (Samaria / Bethany / Jerusalem / Olives / Golgotha), city plazas, wooden signposts.
 
-| Location | v0 blockout | Campaign ties |
-|----------|-------------|---------------|
-| Sea of Galilee (shore) / Capernaum market | Yes (spawn, docks, stalls) | Follow Me; Calm the Storm |
-| Bethsaida | Yes (marker + path) | Nets Overflow; Loaves and Fish |
-| Cana | Yes (marker + inland path) | Water to Wine |
-| Nazareth area | Yes (marker) | Regional flavor |
-| Mount of Transfiguration | Yes (rise + major marker) | ★ Transfiguration |
-| Road through Samaria | Stub marker | Travel south |
-| Bethany | Stub marker | Later detail |
-| Jerusalem | Stub marker | Approach to climax |
-| Mount of Olives / Gethsemane | Stub marker (emissive) | ★ Gethsemane |
-| Golgotha | Stub marker (emissive) | ★ Crucifixion (Level 1 end) |
+| Location | Blockout | Campaign |
+|----------|----------|----------|
+| Sea of Galilee / Capernaum | Spawn, docks, stalls | Follow Me; Calm the Storm |
+| Bethsaida | Pad + path | Nets Overflow; Loaves and Fish |
+| Cana | Pad + inland road + signposts | Water to Wine |
+| Nazareth area | Pad | Regional flavor |
+| Mount of Transfiguration | Rise + major marker | * Transfiguration |
+| Samaria / Bethany / Jerusalem | Roads + pads | Travel south |
+| Mount of Olives / Gethsemane | Emissive marker | * Gethsemane |
+| Golgotha | Emissive marker | * Crucifixion |
 
-Each miracle/beat in `GameState.miracles` has a `location_id` pointing at `GameState.map_locations`. `MapMarkers` draws Label3D pads; clues unlock the next region.
-
-Major beats use `is_major_beat = true` in `GameState.miracles`, a distinct HUD banner, and journal starring (`MiracleJournal`). Full set-piece gameplay is stubbed; scripture + framing ship in MVP.
-
-Scripture strings are **public-domain KJV** (accurate verse text, not paraphrased). On-screen text always shows; TTS uses Godot `DisplayServer.tts_speak` when the OS provides voices (Android TTS quality varies). Future: recorded narration assets.
+Scripture strings are **public-domain KJV** only.
 
 ---
 
 ## How to open & run (desktop)
 
-1. Install [Godot 4.3+](https://godotengine.org/download) (Standard build is fine).
-2. Open Godot → **Import** → select `project.godot` in this repo.
-3. Press **F5** (or Play). Main scene: `scenes/main.tscn`.
-4. **Controls:** WASD / arrows to move; on-screen stick also works with mouse drag. Walk to the yellow beacon (Jesus), stay close as He walks the shore path.
+1. Install [Godot 4.3+](https://godotengine.org/download) (Standard).
+2. Import -> select `project.godot`.
+3. Press **F5**. Main scene: `scenes/main.tscn`.
+4. **Controls:** WASD / arrows; on-screen stick; **E** or **Interact** button; **J** / Journal button.
 
-### Key scenes & scripts
+### Key files
 
 ```
-project.godot
-scenes/main.tscn          # coastal world + player + Jesus + HUD
-scenes/player.tscn        # CharacterBody3D third-person
-scenes/jesus_npc.tscn     # follow-path NPC + beacon
-scenes/ui/hud.tscn        # cash, level, miracles, scripture, major-beat UI
-scenes/ui/virtual_joystick.tscn
-scripts/game_state.gd     # autoload: campaign, leveling, KJV, TTS
-scripts/player.gd
-scripts/jesus_npc.gd
-scripts/city_blockout.gd  # procedural market/docks blockout
-scripts/hud.gd
-scripts/virtual_joystick.gd
-scripts/journal.gd        # major-beat journal formatting
-scripts/map_markers.gd    # ancient-Israel labeled places
+scripts/game_state.gd          # campaign, clues, puzzles, states, KJV/TTS
+scripts/miracle_encounter.gd   # reusable clue->puzzle->miracle controller
+scripts/city_blockout.gd       # roads, pads, signposts
+scripts/map_markers.gd         # labeled places
+scripts/hud.gd / scenes/ui/hud.tscn
+scenes/miracle_encounter.tscn
+scenes/main.tscn
+docs/ANDROID_EXPORT.md
 ```
 
 ---
 
 ## Android export
 
-See [docs/ANDROID_EXPORT.md](docs/ANDROID_EXPORT.md). A stub `export_presets.cfg` is included — you must install Android build templates and set a debug keystore in the Godot editor before exporting.
+See [docs/ANDROID_EXPORT.md](docs/ANDROID_EXPORT.md). Stub `export_presets.cfg` included - install Android templates and a debug keystore before exporting.
 
 ---
 
-## Roadmap (post-MVP)
+## Roadmap
 
-- Implement stubbed miracle locations as real map objectives
-- Full set-pieces for Transfiguration / Gethsemane / Crucifixion
+- Richer set-piece choreography / recorded narration
 - Level 2: Resurrection onward
-- Simple vehicle + wanted/heat system
+- Vehicles + wanted/heat
 - Larger hand-authored map, NPCs, economy
-- Recorded scripture narration packs
-- Optional multiplayer (very late)
 
 ---
 
 ## License notes
 
-- Game code/assets in this repo: see project ownership.
+- Game code/assets: project ownership.
 - **KJV** Bible text is public domain.
