@@ -1,6 +1,7 @@
 extends Node3D
 ## Stylized ancient-Israel coastal blockout: Galilee shore market (Capernaum area),
-## dusty paths toward Cana/Nazareth/Tabor; south road stubs toward Jerusalem.
+## clearer roads Galilee -> Cana -> Nazareth -> Tabor -> south toward Jerusalem.
+## Readable city pads and simple wooden signposts.
 
 func _ready() -> void:
 	_build_ground()
@@ -10,6 +11,9 @@ func _ready() -> void:
 	_build_docks()
 	_build_props()
 	_build_travel_paths()
+	_build_city_pads()
+	_build_signposts()
+	_build_tabor_rise()
 
 func _mat(color: Color) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
@@ -38,6 +42,7 @@ func _box(parent: Node3D, size: Vector3, pos: Vector3, color: Color, rot_y: floa
 func _build_ground() -> void:
 	_box(self, Vector3(100, 0.4, 120), Vector3(0, -0.2, 12), Color(0.72, 0.62, 0.42))
 	_box(self, Vector3(18, 0.15, 14), Vector3(-6, 0.05, 4), Color(0.55, 0.5, 0.42))
+	_box(self, Vector3(14, 1.2, 10), Vector3(-20, 0.5, 14), Color(0.65, 0.58, 0.42))
 	_box(self, Vector3(10, 2.0, 10), Vector3(-12, 1.0, 18), Color(0.6, 0.55, 0.4))
 
 func _build_water() -> void:
@@ -62,6 +67,9 @@ func _build_buildings() -> void:
 		Vector3(-18, 2.8, 8), Vector3(-22, 2.0, 0), Vector3(8, 2.5, 16),
 		Vector3(-4, 2.2, 18), Vector3(20, 2.6, 14),
 		Vector3(-20, 2.4, 12), Vector3(10, 2.0, -2),
+		Vector3(-16, 2.2, 12), Vector3(-20, 2.0, 9),
+		Vector3(-26, 2.4, 15), Vector3(-22, 2.1, 18),
+		Vector3(16, 2.0, -2), Vector3(20, 2.3, -6),
 	]
 	for h in homes:
 		var sx := 4.0 + randf() * 2.0
@@ -73,6 +81,7 @@ func _build_docks() -> void:
 	var wood := Color(0.42, 0.28, 0.16)
 	_box(self, Vector3(8, 0.35, 14), Vector3(-6, 0.1, -12), wood)
 	_box(self, Vector3(3, 0.35, 10), Vector3(-2, 0.1, -16), wood)
+	_box(self, Vector3(6, 0.3, 8), Vector3(16, 0.1, -10), wood)
 	for i in range(4):
 		_box(self, Vector3(0.35, 1.2, 0.35), Vector3(-9, 0.2, -8.0 - i * 3.0), Color(0.3, 0.2, 0.12))
 
@@ -84,7 +93,58 @@ func _build_props() -> void:
 
 func _build_travel_paths() -> void:
 	var dust := Color(0.68, 0.58, 0.4)
-	_box(self, Vector3(4, 0.05, 30), Vector3(-6, 0.02, -2), dust)
-	_box(self, Vector3(28, 0.05, 3.5), Vector3(-10, 0.02, 10), dust)
-	_box(self, Vector3(3.5, 0.05, 40), Vector3(2, 0.02, 28), dust)
-	_box(self, Vector3(3, 0.05, 12), Vector3(-10, 0.02, 14), dust)
+	var road := Color(0.62, 0.52, 0.36)
+	_box(self, Vector3(4.5, 0.06, 36), Vector3(-6, 0.03, -4), dust)
+	_box(self, Vector3(30, 0.06, 3.8), Vector3(-10, 0.03, 8), road)
+	_box(self, Vector3(3.6, 0.06, 14), Vector3(-20, 0.03, 12), road)
+	_box(self, Vector3(12, 0.06, 3.4), Vector3(-22, 0.03, 16), road)
+	_box(self, Vector3(16, 0.06, 3.4), Vector3(-16, 0.03, 17), road)
+	_box(self, Vector3(3.4, 0.06, 8), Vector3(-12, 0.03, 16), road)
+	_box(self, Vector3(22, 0.06, 3.5), Vector3(6, 0.03, 0), dust)
+	_box(self, Vector3(3.8, 0.06, 22), Vector3(0, 0.03, 18), road)
+	_box(self, Vector3(3.8, 0.06, 18), Vector3(2, 0.03, 30), road)
+	_box(self, Vector3(3.5, 0.06, 12), Vector3(4, 0.03, 38), road)
+	_box(self, Vector3(10, 0.06, 3.2), Vector3(8, 0.03, 34), road)
+	_box(self, Vector3(8, 0.06, 3.2), Vector3(1, 0.03, 40), road)
+
+func _build_city_pads() -> void:
+	var plaza := Color(0.7, 0.6, 0.45)
+	var pads := [
+		{"pos": Vector3(8, 0.04, 4), "size": Vector3(8, 0.08, 8)},
+		{"pos": Vector3(-18, 0.04, 10), "size": Vector3(9, 0.08, 9)},
+		{"pos": Vector3(-24, 0.04, 16), "size": Vector3(7, 0.08, 7)},
+		{"pos": Vector3(18, 0.04, -4), "size": Vector3(7, 0.08, 7)},
+		{"pos": Vector3(4, 0.04, 36), "size": Vector3(10, 0.08, 10)},
+		{"pos": Vector3(0, 0.04, 42), "size": Vector3(6, 0.08, 6)},
+	]
+	for p in pads:
+		_box(self, p["size"], p["pos"], plaza)
+
+func _build_signposts() -> void:
+	var signs := [
+		{"pos": Vector3(-10, 0, 8), "text": "<- Cana"},
+		{"pos": Vector3(-18, 0, 12), "text": "Nazareth ->"},
+		{"pos": Vector3(-14, 0, 16), "text": "^ Tabor"},
+		{"pos": Vector3(2, 0, 2), "text": "Bethsaida ->"},
+		{"pos": Vector3(0, 0, 20), "text": "v Samaria / Jerusalem"},
+		{"pos": Vector3(4, 0, 34), "text": "Olives ->  Golgotha v"},
+	]
+	for s in signs:
+		_signpost(s["pos"], s["text"])
+
+func _signpost(pos: Vector3, text: String) -> void:
+	var wood := Color(0.4, 0.28, 0.15)
+	_box(self, Vector3(0.18, 2.2, 0.18), pos + Vector3(0, 1.1, 0), wood)
+	_box(self, Vector3(1.8, 0.7, 0.12), pos + Vector3(0, 2.0, 0), Color(0.55, 0.42, 0.25))
+	var lbl := Label3D.new()
+	lbl.text = text
+	lbl.font_size = 36
+	lbl.position = pos + Vector3(0, 2.0, 0.12)
+	lbl.modulate = Color(0.95, 0.9, 0.75)
+	lbl.outline_size = 4
+	add_child(lbl)
+
+func _build_tabor_rise() -> void:
+	_box(self, Vector3(8, 1.5, 8), Vector3(-12, 0.75, 18), Color(0.58, 0.52, 0.38))
+	_box(self, Vector3(5, 2.5, 5), Vector3(-12, 2.0, 18), Color(0.6, 0.55, 0.4))
+	_box(self, Vector3(3, 0.3, 6), Vector3(-12, 0.2, 14), Color(0.62, 0.52, 0.36))
