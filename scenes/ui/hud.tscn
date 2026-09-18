@@ -1,0 +1,174 @@
+[gd_scene load_steps=3 format=3 uid="uid://bqhud001ic"]
+
+[ext_resource type="Script" path="res://scripts/hud.gd" id="1_hud"]
+[ext_resource type="PackedScene" uid="uid://bqjoy001ic" path="res://scenes/ui/virtual_joystick.tscn" id="2_joy"]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TopBar" type="HBoxContainer" parent="Root"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 16.0
+offset_top = 12.0
+offset_right = -16.0
+offset_bottom = 48.0
+grow_horizontal = 2
+theme_override_constants/separation = 20
+
+[node name="CashLabel" type="Label" parent="Root/TopBar"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.5, 1)
+theme_override_font_sizes/font_size = 18
+text = "Cash: $0"
+
+[node name="StatusLabel" type="Label" parent="Root/TopBar"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Status: Fishmonger"
+
+[node name="LevelLabel" type="Label" parent="Root/TopBar"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 18
+text = "Level: 0"
+
+[node name="MiraclesLabel" type="Label" parent="Root/TopBar"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 1, 0.7, 1)
+theme_override_font_sizes/font_size = 18
+text = "Miracles: 0/8"
+
+[node name="MissionPanel" type="PanelContainer" parent="Root"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_top = 52.0
+offset_right = 300.0
+offset_bottom = 108.0
+grow_horizontal = 2
+
+[node name="MissionLabel" type="Label" parent="Root/MissionPanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Find Jesus at the fish market, then follow Him."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="CompletePanel" type="PanelContainer" parent="Root"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -70.0
+offset_right = 200.0
+offset_bottom = 70.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Root/CompletePanel"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="Root/CompletePanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "Follow Me"
+horizontal_alignment = 1
+
+[node name="BodyLabel" type="Label" parent="Root/CompletePanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Witnessed."
+horizontal_alignment = 1
+
+[node name="LevelUpPanel" type="PanelContainer" parent="Root"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -160.0
+offset_top = -170.0
+offset_right = 160.0
+offset_bottom = -110.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="LevelUpLabel" type="Label" parent="Root/LevelUpPanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
+theme_override_font_sizes/font_size = 20
+text = "LEVEL UP"
+horizontal_alignment = 1
+
+[node name="ScripturePanel" type="PanelContainer" parent="Root"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = -140.0
+offset_right = 320.0
+offset_bottom = 140.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Root/ScripturePanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ReferenceLabel" type="Label" parent="Root/ScripturePanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.75, 0.4, 1)
+theme_override_font_sizes/font_size = 18
+text = "Matthew 4:19 (KJV)"
+horizontal_alignment = 1
+
+[node name="QuoteLabel" type="Label" parent="Root/ScripturePanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Scripture"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="MajorBeatPanel" type="PanelContainer" parent="Root"]
+visible = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -220.0
+offset_top = 120.0
+offset_right = 220.0
+offset_bottom = 180.0
+grow_horizontal = 2
+
+[node name="MajorLabel" type="Label" parent="Root/MajorBeatPanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.35, 1)
+theme_override_font_sizes/font_size = 18
+text = "MAJOR STORY BEAT"
+horizontal_alignment = 1
+
+[node name="VirtualJoystick" parent="Root" instance=ExtResource("2_joy")]
