@@ -20,6 +20,20 @@ func _ready() -> void:
 	spring_arm.spring_length = 7.0
 	spring_arm.rotation_degrees.x = -28.0
 	floor_snap_length = 0.4
+	collision_layer = 1
+	collision_mask = 3  # ground(1) + props(2)
+	_apply_look()
+
+func _apply_look() -> void:
+	var body := get_node_or_null("MeshInstance3D") as MeshInstance3D
+	var head := get_node_or_null("Head") as MeshInstance3D
+	var tunic := get_node_or_null("Tunic") as MeshInstance3D
+	if body:
+		body.material_override = WorldTextures.mat("tunic", Color(0.45, 0.55, 0.75), 0.85)
+	if head:
+		head.material_override = WorldTextures.mat("skin", Color(0.9, 0.75, 0.6), 0.7)
+	if tunic:
+		tunic.material_override = WorldTextures.mat("tunic", Color(0.4, 0.5, 0.72), 0.88)
 
 func _physics_process(delta: float) -> void:
 	var input_dir := _get_move_input()
