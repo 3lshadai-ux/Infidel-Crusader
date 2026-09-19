@@ -177,11 +177,11 @@ func _on_puzzle_submit() -> void:
 		ok = GameState.submit_puzzle_answer(_puzzle_miracle_id, answer)
 	if ok:
 		puzzle_feedback.text = "Correct - the way is open."
-		puzzle_feedback.add_theme_color_override("font_color", Color(0.5, 1.0, 0.55))
+		puzzle_feedback.add_theme_color_override("font_color", Color(0.25, 1.0, 0.4))
 		get_tree().create_timer(1.2).timeout.connect(func(): puzzle_panel.visible = false)
 	else:
 		puzzle_feedback.text = "Not yet - search the scriptures and try again."
-		puzzle_feedback.add_theme_color_override("font_color", Color(1.0, 0.55, 0.45))
+		puzzle_feedback.add_theme_color_override("font_color", Color(1.0, 0.35, 0.28))
 
 func _toggle_journal() -> void:
 	journal_panel.visible = not journal_panel.visible
