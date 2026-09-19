@@ -3,14 +3,14 @@
 [ext_resource type="Script" path="res://scripts/miracle_encounter.gd" id="1_enc"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_beacon"]
-radius = 0.4
-height = 0.8
+radius = 0.85
+height = 1.7
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_beacon"]
 albedo_color = Color(0.4, 0.7, 1, 1)
 emission_enabled = true
 emission = Color(0.3, 0.6, 1, 1)
-emission_energy_multiplier = 1.6
+emission_energy_multiplier = 4.0
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_area"]
 radius = 5.5
@@ -19,14 +19,14 @@ radius = 5.5
 script = ExtResource("1_enc")
 
 [node name="Beacon" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 0)
 mesh = SubResource("SphereMesh_beacon")
 surface_material_override/0 = SubResource("StandardMaterial3D_beacon")
 
 [node name="Label3D" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.4, 0)
 text = "Miracle"
-font_size = 42
+font_size = 64
 modulate = Color(0.85, 0.9, 1, 1)
 outline_size = 6
 
