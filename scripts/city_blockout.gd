@@ -14,6 +14,7 @@ func _ready() -> void:
 	_build_city_pads()
 	_build_signposts()
 	_build_tabor_rise()
+	_build_vegetation()
 
 func _mat(color: Color) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
@@ -46,11 +47,11 @@ func _build_ground() -> void:
 	_box(self, Vector3(10, 2.0, 10), Vector3(-12, 1.0, 18), Color(0.6, 0.55, 0.4))
 
 func _build_water() -> void:
-	_box(self, Vector3(90, 0.3, 28), Vector3(4, -0.35, -26), Color(0.2, 0.45, 0.65))
+	_box(self, Vector3(90, 0.3, 28), Vector3(4, -0.35, -26), Color(0.08, 0.42, 0.82))
 
 func _build_market_stalls() -> void:
 	var stall_color := Color(0.55, 0.35, 0.2)
-	var cloth := Color(0.7, 0.25, 0.2)
+	var cloth := Color(0.86, 0.18, 0.14)
 	for i in range(5):
 		var x := -12.0 + i * 3.5
 		_box(self, Vector3(2.4, 0.8, 1.6), Vector3(x, 0.4, 6), stall_color)
@@ -60,8 +61,8 @@ func _build_market_stalls() -> void:
 		_box(self, Vector3(2.2, 0.7, 1.4), Vector3(x, 0.35, 10), Color(0.45, 0.3, 0.18))
 
 func _build_buildings() -> void:
-	var stone := Color(0.78, 0.72, 0.58)
-	var mud := Color(0.65, 0.55, 0.4)
+	var stone := Color(0.82, 0.74, 0.58)
+	var mud := Color(0.7, 0.55, 0.38)
 	var homes := [
 		Vector3(12, 2.5, 8), Vector3(18, 3.0, 2), Vector3(14, 2.2, -4),
 		Vector3(-18, 2.8, 8), Vector3(-22, 2.0, 0), Vector3(8, 2.5, 16),
@@ -75,7 +76,7 @@ func _build_buildings() -> void:
 		var sx := 4.0 + randf() * 2.0
 		var sz := 3.5 + randf() * 1.5
 		_box(self, Vector3(sx, h.y, sz), Vector3(h.x, h.y * 0.5, h.z), stone if randf() > 0.4 else mud)
-		_box(self, Vector3(sx + 0.3, 0.2, sz + 0.3), Vector3(h.x, h.y + 0.1, h.z), Color(0.5, 0.45, 0.35))
+		_box(self, Vector3(sx + 0.3, 0.2, sz + 0.3), Vector3(h.x, h.y + 0.1, h.z), Color(0.78, 0.28, 0.16))
 
 func _build_docks() -> void:
 	var wood := Color(0.42, 0.28, 0.16)
@@ -148,3 +149,22 @@ func _build_tabor_rise() -> void:
 	_box(self, Vector3(8, 1.5, 8), Vector3(-12, 0.75, 18), Color(0.58, 0.52, 0.38))
 	_box(self, Vector3(5, 2.5, 5), Vector3(-12, 2.0, 18), Color(0.6, 0.55, 0.4))
 	_box(self, Vector3(3, 0.3, 6), Vector3(-12, 0.2, 14), Color(0.62, 0.52, 0.36))
+
+func _build_vegetation() -> void:
+	## Olive / shoreline greens that pop against terracotta and sea blue.
+	var trunk := Color(0.38, 0.26, 0.14)
+	var olive := Color(0.22, 0.58, 0.28)
+	var leaf_bright := Color(0.32, 0.72, 0.34)
+	var spots := [
+		Vector3(-14, 0, 2), Vector3(-10, 0, 12), Vector3(2, 0, 8),
+		Vector3(14, 0, 10), Vector3(-24, 0, 8), Vector3(6, 0, 22),
+		Vector3(-8, 0, -6), Vector3(18, 0, 2), Vector3(-2, 0, 28),
+	]
+	for pos in spots:
+		_box(self, Vector3(0.28, 1.6, 0.28), pos + Vector3(0, 0.8, 0), trunk)
+		_box(self, Vector3(1.6, 0.9, 1.6), pos + Vector3(0, 1.85, 0), olive)
+		_box(self, Vector3(0.9, 0.5, 0.9), pos + Vector3(0.35, 2.15, 0.2), leaf_bright)
+	# Shore reeds / low scrub near Galilee waterline
+	for i in range(7):
+		var x := -16.0 + i * 5.0
+		_box(self, Vector3(0.35, 0.55, 0.35), Vector3(x, 0.25, -18), Color(0.18, 0.52, 0.3))
