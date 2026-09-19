@@ -4,8 +4,8 @@ extends CharacterBody3D
 enum Phase { WAITING, WALKING, ARRIVED }
 
 @export var walk_speed: float = 3.2
-@export var follow_radius: float = 8.0
-@export var lose_radius: float = 14.0
+@export var follow_radius: float = 10.0
+@export var lose_radius: float = 18.0
 
 @onready var path_points: Node3D = $PathPoints
 @onready var marker_mesh: MeshInstance3D = $MarkerBeacon
@@ -27,16 +27,17 @@ func _ready() -> void:
 	GameState.update_mission_text("Approach Jesus at the Capernaum shore (yellow beacon).")
 
 func _physics_process(delta: float) -> void:
-	if _player == null:
+	if _player == null or not is_instance_valid(_player):
 		_player = get_tree().get_first_node_in_group("player") as Node3D
-		return
+		if _player == null:
+			return
 
 	var dist := global_position.distance_to(_player.global_position)
 
 	match phase:
 		Phase.WAITING:
 			_bob_marker(delta)
-			if dist <= follow_radius * 0.75:
+			if dist <= follow_radius:
 				_start_follow()
 		Phase.WALKING:
 			_bob_marker(delta)
