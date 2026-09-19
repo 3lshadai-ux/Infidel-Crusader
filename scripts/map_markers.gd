@@ -25,7 +25,7 @@ func _spawn_marker(loc_id: String, pos: Vector3, label_name: String, is_v0: bool
 	box.size = Vector3(pad_size, 0.14, pad_size)
 	pad.mesh = box
 	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Color(0.78, 0.58, 0.28) if is_v0 else Color(0.45, 0.45, 0.5)
+	mat.albedo_color = Color(0.88, 0.42, 0.18) if is_v0 else Color(0.28, 0.48, 0.72)
 	pad.material_override = mat
 	pad.position.y = 0.08
 	root.add_child(pad)
@@ -45,14 +45,14 @@ func _spawn_marker(loc_id: String, pos: Vector3, label_name: String, is_v0: bool
 	cyl.height = 2.0 if is_v0 else 1.4
 	pillar.mesh = cyl
 	var pmat := StandardMaterial3D.new()
-	pmat.albedo_color = Color(0.9, 0.75, 0.3) if is_v0 else Color(0.5, 0.5, 0.55)
+	pmat.albedo_color = Color(0.95, 0.55, 0.18) if is_v0 else Color(0.25, 0.55, 0.78)
 	if loc_id in ["tabor", "olives_gethsemane", "golgotha"]:
 		pmat.emission_enabled = true
-		pmat.emission = Color(1, 0.85, 0.2)
+		pmat.emission = Color(1.0, 0.55, 0.12)
 		pmat.emission_energy_multiplier = 1.8
 	elif loc_id == "cana":
 		pmat.emission_enabled = true
-		pmat.emission = Color(0.7, 0.35, 0.85)
+		pmat.emission = Color(0.9, 0.12, 0.28)
 		pmat.emission_energy_multiplier = 1.2
 	pillar.material_override = pmat
 	pillar.position.y = 1.0
@@ -73,7 +73,7 @@ func _spawn_road_hints() -> void:
 		box.size = Vector3(1.2, 0.08, 0.35)
 		mi.mesh = box
 		var mat := StandardMaterial3D.new()
-		mat.albedo_color = Color(0.85, 0.7, 0.35)
+		mat.albedo_color = Color(0.2, 0.7, 0.4)
 		mi.material_override = mat
 		mi.position = h["pos"]
 		mi.rotation.y = h["rot"]
