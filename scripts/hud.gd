@@ -228,8 +228,5 @@ func _on_joystick(dir: Vector2) -> void:
 		player.set_joystick(dir)
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("interact"):
-		pass
-	if event is InputEventKey and event.pressed and not event.echo:
-		if event.keycode == KEY_J:
-			_toggle_journal()
+	if event.is_action_pressed("journal"):
+		_toggle_journal()
