@@ -1,5 +1,5 @@
 extends Node
-## AudioManager — soft Christian-elevator ambient bed that builds toward miracles.
+## AudioManager -- soft Christian-elevator ambient bed that builds toward miracles.
 ## Original audio only (no copyrighted hymns). Prefer OGG under assets/audio/;
 ## falls back to .ogg.b64 companions, then procedural AudioStreamGenerator pad.
 
@@ -10,12 +10,12 @@ const SWELL_B64 := "res://assets/audio/ambient_swell.ogg.b64"
 
 const NEAR_START := 42.0
 const NEAR_PEAK := 8.0
-const BED_BASE_DB := -18.0
-const BED_NEAR_DB := -10.0
+const BED_BASE_DB := -26.0
+const BED_NEAR_DB := -16.0
 const SWELL_BASE_DB := -80.0
-const SWELL_NEAR_DB := -14.0
-const SWELL_PEAK_DB := -8.0
-const DUCK_DB := -28.0
+const SWELL_NEAR_DB := -9.0
+const SWELL_PEAK_DB := -3.5
+const DUCK_DB := -36.0
 const DUCK_SECONDS := 12.0
 
 var _bed: AudioStreamPlayer
@@ -95,15 +95,15 @@ func _process(delta: float) -> void:
 		_duck_left = maxf(0.0, _duck_left - delta)
 	var duck := 1.0
 	if _duck_left > 0.0:
-		duck = 0.35
+		duck = 0.22
 	var bed_db := lerpf(BED_BASE_DB, BED_NEAR_DB, _intensity)
-	var swell_db := lerpf(SWELL_BASE_DB, SWELL_NEAR_DB, clampf(_intensity * 1.15, 0.0, 1.0))
+	var swell_db := lerpf(SWELL_BASE_DB, SWELL_NEAR_DB, clampf(_intensity * 1.35, 0.0, 1.0))
 	if _scripture_peak or _intensity > 0.92:
 		swell_db = lerpf(swell_db, SWELL_PEAK_DB, clampf((_intensity - 0.85) / 0.15, 0.0, 1.0))
 	_bed.pitch_scale = lerpf(1.0, 1.04, _intensity)
 	_swell.pitch_scale = lerpf(1.0, 1.06, _intensity)
-	_bed.volume_db = bed_db + (DUCK_DB - bed_db) * (1.0 - duck) * 0.55
-	_swell.volume_db = swell_db + (DUCK_DB - swell_db) * (1.0 - duck) * 0.7
+	_bed.volume_db = bed_db + (DUCK_DB - bed_db) * (1.0 - duck) * 0.75
+	_swell.volume_db = swell_db + (DUCK_DB - swell_db) * (1.0 - duck) * 0.88
 	if not _bed.playing:
 		_bed.play()
 	if not _swell.playing:
