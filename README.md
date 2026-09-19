@@ -110,7 +110,9 @@ Scripture strings are **public-domain KJV** only.
 ```
 scripts/game_state.gd          # campaign, clues, puzzles, states, KJV/TTS
 scripts/audio_manager.gd       # ambient bed + intensity ramp + TTS duck
-scripts/miracle_encounter.gd   # clue->puzzle->miracle + cinematic set-pieces
+scripts/miracle_encounter.gd   # interaction layer (extends MiracleEncounterCore)
+scripts/miracle_encounter_core.gd  # stages, lighting, ambience hooks
+scripts/miracle_setpieces.gd   # cinematic stage/FX helpers (class_name)
 scripts/city_blockout.gd       # roads, pads, signposts
 scripts/map_markers.gd         # labeled places
 scripts/hud.gd / scenes/ui/hud.tscn
