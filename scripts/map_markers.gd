@@ -25,7 +25,11 @@ func _spawn_marker(loc_id: String, pos: Vector3, label_name: String, is_v0: bool
 	box.size = Vector3(pad_size, 0.14, pad_size)
 	pad.mesh = box
 	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Color(0.88, 0.42, 0.18) if is_v0 else Color(0.28, 0.48, 0.72)
+	mat.albedo_color = Color(0.95, 0.48, 0.16) if is_v0 else Color(0.32, 0.58, 0.88)
+	mat.emission_enabled = is_v0
+	if is_v0:
+		mat.emission = Color(0.95, 0.4, 0.1)
+		mat.emission_energy_multiplier = 0.55
 	pad.material_override = mat
 	pad.position.y = 0.08
 	root.add_child(pad)
@@ -34,7 +38,8 @@ func _spawn_marker(loc_id: String, pos: Vector3, label_name: String, is_v0: bool
 	lbl.text = label_name
 	lbl.font_size = 48 if is_v0 else 34
 	lbl.position = Vector3(0, 2.4, 0)
-	lbl.modulate = Color(1, 0.95, 0.7) if is_v0 else Color(0.75, 0.75, 0.8)
+	lbl.modulate = Color(1.0, 0.98, 0.75) if is_v0 else Color(0.85, 0.9, 1.0)
+	lbl.outline_modulate = Color(0.05, 0.05, 0.08, 0.9)
 	lbl.outline_size = 8
 	root.add_child(lbl)
 
@@ -49,11 +54,11 @@ func _spawn_marker(loc_id: String, pos: Vector3, label_name: String, is_v0: bool
 	if loc_id in ["tabor", "olives_gethsemane", "golgotha"]:
 		pmat.emission_enabled = true
 		pmat.emission = Color(1.0, 0.55, 0.12)
-		pmat.emission_energy_multiplier = 1.8
+		pmat.emission_energy_multiplier = 2.4
 	elif loc_id == "cana":
 		pmat.emission_enabled = true
 		pmat.emission = Color(0.9, 0.12, 0.28)
-		pmat.emission_energy_multiplier = 1.2
+		pmat.emission_energy_multiplier = 1.8
 	pillar.material_override = pmat
 	pillar.position.y = 1.0
 	root.add_child(pillar)
