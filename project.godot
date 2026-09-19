@@ -7,7 +7,7 @@ config_version=5
 
 config/name="Infidel Crusader"
 config/description="GTA-like open-world action sandbox - Level 1 with ambient music + cinematic miracles"
-config/version="0.2.2"
+config/version="0.2.3"
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://assets/icon.svg"
@@ -73,3 +73,8 @@ textures/vram_compression/import_etc2_astc=true
 
 gdscript/warnings/inferred_declaration=1
 gdscript/warnings/untyped_declaration=0
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
+pointing/emulate_mouse_from_touch=true
