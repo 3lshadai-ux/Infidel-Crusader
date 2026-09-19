@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://bqhud001ic"]
+[gd_scene load_steps=4 format=3 uid="uid://bqhud001ic"]
 
 [ext_resource type="Script" path="res://scripts/hud.gd" id="1_hud"]
 [ext_resource type="PackedScene" uid="uid://bqjoy001ic" path="res://scenes/ui/virtual_joystick.tscn" id="2_joy"]
+[ext_resource type="PackedScene" uid="uid://bqlook001ic" path="res://scenes/ui/camera_look_pad.tscn" id="3_look"]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
@@ -318,6 +319,18 @@ theme_override_font_sizes/font_size = 14
 text = "Hint"
 horizontal_alignment = 1
 autowrap_mode = 3
+
+
+[node name="CameraLookPad" parent="Root" instance=ExtResource("3_look")]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 0.5
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -100.0
+grow_horizontal = 0
+grow_vertical = 2
+mouse_filter = 0
 
 [node name="BottomBar" type="HBoxContainer" parent="Root"]
 layout_mode = 1
