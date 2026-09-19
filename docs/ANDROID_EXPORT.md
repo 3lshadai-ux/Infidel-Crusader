@@ -41,6 +41,7 @@ For editor one-click deploy, enable **Gradle Build** in the Android preset and i
 ## Touch controls / UI anchors
 
 - **Virtual joystick** - bottom-left (`scenes/ui/virtual_joystick.tscn`); drag works with mouse on desktop too.
+- **Camera look pad** - right half of screen (`scenes/ui/camera_look_pad.tscn`); drag to yaw/pitch the spring-arm camera. Desktop: hold right mouse and drag.
 - **Interact** + **Journal** - bottom-right large buttons (56px min height) for thumbs.
 - **Mission / scripture / puzzle** panels - centered with autowrap; scripture panel widened for readable KJV on phones.
 - **Clue panel** - top-right so it does not cover the stick.
