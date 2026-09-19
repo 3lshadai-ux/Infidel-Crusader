@@ -1,11 +1,17 @@
 extends CharacterBody3D
 ## Third-person mobile-friendly character controller.
 ## Keyboard (WASD) on desktop; virtual joystick on touch.
+## Look: CameraLookPad (mobile) / right-mouse drag (desktop).
 
 @export var move_speed: float = 7.5
 @export var acceleration: float = 16.0
 @export var rotation_speed: float = 12.0
 @export var gravity: float = 20.0
+
+@export var look_sensitivity: float = 0.12
+@export var invert_y: bool = false
+@export var pitch_min_deg: float = -50.0
+@export var pitch_max_deg: float = -10.0
 
 @onready var mesh: MeshInstance3D = $MeshInstance3D
 @onready var camera_pivot: Node3D = $CameraPivot
@@ -14,6 +20,8 @@ extends CharacterBody3D
 
 ## Set by VirtualJoystick UI (Vector2 in -1..1). Zero when not touching.
 var joystick_input: Vector2 = Vector2.ZERO
+
+var _rmb_looking: bool = false
 
 func _ready() -> void:
 	add_to_group("player")
@@ -34,6 +42,13 @@ func _apply_look() -> void:
 		head.material_override = WorldTextures.mat("skin", Color(0.9, 0.75, 0.6), 0.7)
 	if tunic:
 		tunic.material_override = WorldTextures.mat("tunic", Color(0.4, 0.5, 0.72), 0.88)
+
+func add_look(delta_yaw: float, delta_pitch: float) -> void:
+	## delta_yaw / delta_pitch are screen-pixel drag deltas.
+	camera_pivot.rotate_y(-delta_yaw * look_sensitivity * 0.0174533)
+	var pitch_sign := -1.0 if invert_y else 1.0
+	var new_pitch := spring_arm.rotation_degrees.x + (delta_pitch * pitch_sign * look_sensitivity)
+	spring_arm.rotation_degrees.x = clampf(new_pitch, pitch_min_deg, pitch_max_deg)
 
 func _physics_process(delta: float) -> void:
 	var input_dir := _get_move_input()
@@ -77,3 +92,20 @@ func _get_move_input() -> Vector2:
 
 func set_joystick(dir: Vector2) -> void:
 	joystick_input = dir.limit_length(1.0)
+
+func _unhandled_input(event: InputEvent) -> void:
+	# Desktop: right-mouse drag looks around (optional mouse-capture feel).
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
+		_rmb_looking = event.pressed
+		if event.pressed:
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		else:
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		get_viewport().set_input_as_handled()
+	elif event is InputEventMouseMotion and _rmb_looking:
+		var mm := event as InputEventMouseMotion
+		add_look(mm.relative.x, mm.relative.y)
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("ui_cancel") and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		_rmb_looking = false
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
