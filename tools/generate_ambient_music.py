@@ -69,8 +69,10 @@ V = [196.00, 246.94, 293.66, 392.00]
 chords = [(I, 4), (IV, 4), (V, 4), (I, 4)]
 bed_wav = os.path.join(OUT, "ambient_bed.wav")
 swell_wav = os.path.join(OUT, "ambient_swell.wav")
-write_loop(bed_wav, 8.0, chords, bpm=42, swell=False, master=0.38, pad_amp=0.065)
-write_loop(swell_wav, 8.0, chords, bpm=46, swell=True, master=0.72, pad_amp=0.095)
+# Softer quieter ambient bed while roaming
+write_loop(bed_wav, 4.0, chords, bpm=42, swell=False, master=0.38, pad_amp=0.065)
+# Bigger clearer swell near miracles
+write_loop(swell_wav, 4.0, chords, bpm=46, swell=True, master=0.72, pad_amp=0.095)
 for name in ("ambient_bed", "ambient_swell"):
     wav = os.path.join(OUT, name + ".wav")
     ogg = os.path.join(OUT, name + ".ogg")
