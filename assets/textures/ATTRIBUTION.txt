@@ -1,0 +1,3 @@
+CC0 photo albedo maps derived from Poly Haven (https://polyhaven.com).
+Includes sand, stone, wood, roof, cloth, bark, dirt, plaster, cobble, leather, water, skin, robe, tunic, leaf, and sky panorama.
+All Poly Haven content is CC0 public domain.
