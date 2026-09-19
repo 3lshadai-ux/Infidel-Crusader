@@ -90,6 +90,12 @@ func _connect_encounter() -> void:
 		enc.fill_jars_progress.connect(_on_jars_progress)
 	if enc.has_signal("watch_progress"):
 		enc.watch_progress.connect(_on_watch_progress)
+	if enc.has_signal("sleep_warning"):
+		enc.sleep_warning.connect(_on_sleep_warning)
+	if enc.has_signal("clear_sleep_warning"):
+		enc.clear_sleep_warning.connect(_on_clear_sleep_warning)
+	if enc.has_signal("level1_complete"):
+		enc.level1_complete.connect(_on_level1_complete)
 
 func _refresh_cash(amount: int) -> void:
 	cash_label.text = "Cash: $%d" % amount
@@ -203,6 +209,18 @@ func _on_jars_progress(filled: int, total: int) -> void:
 
 func _on_watch_progress(elapsed: float, required: float) -> void:
 	_show_hint("Keep watch... %.0f / %.0f s" % [elapsed, required])
+
+func _on_sleep_warning(text: String) -> void:
+	_show_hint(text)
+	hint_label.add_theme_color_override("font_color", Color(1.0, 0.75, 0.45))
+
+func _on_clear_sleep_warning() -> void:
+	hint_label.remove_theme_color_override("font_color")
+
+func _on_level1_complete() -> void:
+	major_panel.visible = true
+	major_label.text = "* LEVEL 1 COMPLETE *\nThe Crucifixion witnessed.\nFree roam unlocked — Resurrection / Level 2 TBD"
+	get_tree().create_timer(8.0).timeout.connect(func(): major_panel.visible = false)
 
 func _on_joystick(dir: Vector2) -> void:
 	var player := get_tree().get_first_node_in_group("player")
