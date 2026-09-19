@@ -38,7 +38,7 @@ static func stage_cana_wedding(stage: Node3D) -> void:
 	for i in range(4):
 		var x := -2.5 + i * 1.6
 		var light := OmniLight3D.new()
-		light.light_color = Color(1.0, 0.55, 0.75) if i % 2 == 0 else Color(0.95, 0.75, 0.35)
+		light.light_color = Color(1.0, 0.35, 0.45) if i % 2 == 0 else Color(0.95, 0.75, 0.35)
 		light.light_energy = 1.4
 		light.omni_range = 6.0
 		light.position = Vector3(x, 2.2, -1.5)
@@ -56,7 +56,7 @@ static func stage_cana_wedding(stage: Node3D) -> void:
 		head.position = Vector3(0, 0.75, 0)
 		g.add_child(head)
 	var feast := Label3D.new()
-	feast.text = "Wedding Feast — Cana"
+	feast.text = "Wedding Feast -- Cana"
 	feast.font_size = 36
 	feast.position = Vector3(0, 3.8, -2.5)
 	feast.modulate = Color(0.95, 0.8, 0.95)
@@ -67,7 +67,7 @@ static func stage_boat_dock(stage: Node3D) -> void:
 	mesh_box(stage, Vector3(3.2, 0.5, 1.4), Vector3(0, 0.35, -5.2), Color(0.35, 0.22, 0.12))
 	for i in range(6):
 		for j in range(4):
-			mesh_box(stage, Vector3(0.08, 0.04, 0.9), Vector3(-1.2 + i * 0.45, 0.15 + j * 0.08, -4.0), Color(0.55, 0.55, 0.5))
+			mesh_box(stage, Vector3(0.08, 0.04, 0.9), Vector3(-1.2 + i * 0.45, 0.15 + j * 0.08, -4.0), Color(0.22, 0.58, 0.38))
 	var lbl := Label3D.new()
 	lbl.text = "Let down the net"
 	lbl.font_size = 32
@@ -114,13 +114,13 @@ static func stage_tabor_cloud(stage: Node3D) -> void:
 static func stage_garden_night(stage: Node3D) -> void:
 	for i in range(6):
 		var angle := TAU * float(i) / 6.0
-		mesh_cyl(stage, 0.2, 2.2, Vector3(cos(angle) * 4.0, 1.1, sin(angle) * 4.0), Color(0.25, 0.35, 0.2))
+		mesh_cyl(stage, 0.2, 2.2, Vector3(cos(angle) * 4.0, 1.1, sin(angle) * 4.0), Color(0.18, 0.48, 0.22))
 		var leaf := MeshInstance3D.new()
 		var sm := SphereMesh.new()
 		sm.radius = 0.9
 		sm.height = 1.2
 		leaf.mesh = sm
-		leaf.material_override = mat(Color(0.2, 0.4, 0.22))
+		leaf.material_override = mat(Color(0.2, 0.62, 0.28))
 		leaf.position = Vector3(cos(angle) * 4.0, 2.4, sin(angle) * 4.0)
 		stage.add_child(leaf)
 
@@ -158,14 +158,14 @@ static func fx_simple(fx: Node3D, color: Color) -> void:
 static func fx_wine(fx: Node3D, jars: Array) -> void:
 	for jar in jars:
 		paint_jar_wine(jar)
-	fx_simple(fx, Color(0.55, 0.15, 0.45))
+	fx_simple(fx, Color(0.85, 0.12, 0.22))
 	for i in range(8):
 		var p := MeshInstance3D.new()
 		var sm := SphereMesh.new()
 		sm.radius = 0.08
 		sm.height = 0.16
 		p.mesh = sm
-		p.material_override = mat(Color(0.6, 0.1, 0.35), 1.5)
+		p.material_override = mat(Color(0.82, 0.05, 0.16), 1.8)
 		var angle := TAU * float(i) / 8.0
 		p.position = Vector3(cos(angle) * 2.0, 0.5, sin(angle) * 2.0)
 		fx.add_child(p)
@@ -176,10 +176,10 @@ static func fx_nets_catch(fx: Node3D) -> void:
 		var box := BoxMesh.new()
 		box.size = Vector3(0.35, 0.1, 0.15)
 		fish.mesh = box
-		fish.material_override = mat(Color(0.4, 0.55, 0.7), 0.5)
+		fish.material_override = mat(Color(0.18, 0.62, 0.42), 0.65)
 		fish.position = Vector3(randf_range(-1.5, 1.5), randf_range(0.3, 1.2), randf_range(-5.5, -3.0))
 		fx.add_child(fish)
-	fx_simple(fx, Color(0.25, 0.6, 0.95))
+	fx_simple(fx, Color(0.1, 0.55, 1.0))
 
 static func fx_storm_calm(fx: Node3D) -> void:
 	fx_simple(fx, Color(0.7, 0.9, 1.0))
@@ -238,12 +238,12 @@ static func fx_transfiguration(fx: Node3D) -> void:
 	fx.add_child(voice)
 
 static func fx_gethsemane(fx: Node3D) -> void:
-	fx_simple(fx, Color(0.35, 0.5, 0.4))
+	fx_simple(fx, Color(0.25, 0.7, 0.4))
 	var quiet := Label3D.new()
 	quiet.text = "Nevertheless not as I will, but as thou wilt."
 	quiet.font_size = 28
 	quiet.position = Vector3(0, 3.5, 0)
-	quiet.modulate = Color(0.7, 0.85, 0.7)
+	quiet.modulate = Color(0.45, 0.95, 0.55)
 	fx.add_child(quiet)
 
 static func fx_crucifixion(fx: Node3D) -> void:
@@ -283,7 +283,7 @@ static func paint_jar_water(jar: Node3D) -> void:
 	var water := jar.get_node_or_null("Water")
 	if water:
 		water.visible = true
-		water.material_override = mat(Color(0.35, 0.55, 0.85), 0.4)
+		water.material_override = mat(Color(0.12, 0.48, 0.95), 0.55)
 	if jar is MeshInstance3D:
 		(jar as MeshInstance3D).material_override = mat(Color(0.5, 0.48, 0.42), 0.2)
 
@@ -292,9 +292,9 @@ static func paint_jar_wine(jar: Node3D) -> void:
 	var water := jar.get_node_or_null("Water")
 	if water:
 		water.visible = true
-		water.material_override = mat(Color(0.55, 0.12, 0.35), 1.2)
+		water.material_override = mat(Color(0.78, 0.06, 0.18), 1.6)
 	if jar is MeshInstance3D:
-		(jar as MeshInstance3D).material_override = mat(Color(0.45, 0.25, 0.55), 0.9)
+		(jar as MeshInstance3D).material_override = mat(Color(0.55, 0.12, 0.42), 1.1)
 
 static func spawn_waterpots(parent: Node3D, count: int) -> Array:
 	var jars: Array = []
@@ -323,7 +323,7 @@ static func spawn_waterpots(parent: Node3D, count: int) -> Array:
 		disc.bottom_radius = 0.28
 		disc.height = 0.05
 		water.mesh = disc
-		water.material_override = mat(Color(0.35, 0.55, 0.85), 0.3)
+		water.material_override = mat(Color(0.12, 0.48, 0.95), 0.45)
 		water.position = Vector3(0, 0.2, 0)
 		water.visible = false
 		water.name = "Water"
