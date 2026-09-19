@@ -2,9 +2,9 @@ extends CharacterBody3D
 ## Third-person mobile-friendly character controller.
 ## Keyboard (WASD) on desktop; virtual joystick on touch.
 
-@export var move_speed: float = 6.0
-@export var acceleration: float = 12.0
-@export var rotation_speed: float = 10.0
+@export var move_speed: float = 7.0
+@export var acceleration: float = 14.0
+@export var rotation_speed: float = 12.0
 
 @onready var mesh: MeshInstance3D = $MeshInstance3D
 @onready var camera_pivot: Node3D = $CameraPivot
@@ -15,8 +15,8 @@ extends CharacterBody3D
 var joystick_input: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
-	spring_arm.spring_length = 6.0
-	spring_arm.rotation_degrees.x = -25.0
+	spring_arm.spring_length = 7.0
+	spring_arm.rotation_degrees.x = -28.0
 
 func _physics_process(delta: float) -> void:
 	var input_dir := _get_move_input()

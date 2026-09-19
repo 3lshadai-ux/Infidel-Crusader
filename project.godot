@@ -68,3 +68,8 @@ journal={
 
 renderer/rendering_method="mobile"
 textures/vram_compression/import_etc2_astc=true
+
+[debug]
+
+gdscript/warnings/inferred_declaration=1
+gdscript/warnings/untyped_declaration=0
