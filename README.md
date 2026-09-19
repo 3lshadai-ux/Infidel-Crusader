@@ -2,7 +2,7 @@
 
 **Genre:** GTA-like open-world action sandbox for mobile  
 **Engine:** Godot 4.3+ (Android export target)  
-**Status:** Level 1 playable pass - Follow Me + full Water-to-Wine showcase + other miracles/major beats hooked
+**Status:** Level 1 playable pass — ambient music + cinematic miracle set-pieces (v0.2.1)
 
 A stylized, fictional New Testament-era coastal open world. You begin as a **fishmonger** at the market/docks. The opening calling: encounter Jesus, **follow Him**, and become a **Disciple**. Then travel the map for miracles and major story beats.
 
@@ -25,6 +25,32 @@ Tone: respectful of the Gospels inside a sandbox game frame. Title is edgy; cont
 | Journal / clue panel / puzzle dialog / level-up toast | **Yes** |
 | KJV overlay + `DisplayServer.tts_speak` | **Yes** |
 | Vehicles / wanted / huge GIS map / multiplayer | Roadmap only |
+
+
+### Music (Christian elevator bed)
+
+Soft original **hymn-adjacent elevator/muzak** loops play during free roam (`AudioManager` autoload).
+
+| How to hear it | What happens |
+|----------------|--------------|
+| Start the game (F5) | Gentle looping ambient bed (I–IV–V–I pad) |
+| Walk toward an **active** miracle / major-beat marker | Intensity **builds** — louder bed, swell stem, slight pitch lift |
+| Witness / scripture overlay + TTS | Music **peaks**, then **ducks** so KJV quotes stay clear |
+| Leave the marker / finish the beat | Ease back to soft roam bed |
+
+Original audio only (no copyrighted hymns). Files under `assets/audio/` — see that folder’s README to swap custom OGG loops. Generator: `tools/generate_ambient_music.py`.
+
+### Deepened set-pieces
+
+| Beat | What you’ll notice |
+|------|--------------------|
+| **Water to Wine** | Wedding lanterns, guest markers, jar water→wine color change |
+| **Nets Overflow** | Boat/dock + net grid; haul-net participate before scripture |
+| **Calm the Storm** | Sky darkens + wind streaks; calm light when you witness |
+| **Loaves and Fish** | Crowd ring + basket; multiply food particles |
+| **★ Transfiguration** | Bright cloud/bloom hold; “voice out of the cloud” framing |
+| **★ Gethsemane** | Night lighting, olive trees; sleep-warning if you leave the watch |
+| **★ Crucifixion** | Approach path, solemn light, cross silhouette; Level 1 complete banner |
 
 ### Water to Wine showcase (first post-disciple miracle)
 
@@ -83,10 +109,13 @@ Scripture strings are **public-domain KJV** only.
 
 ```
 scripts/game_state.gd          # campaign, clues, puzzles, states, KJV/TTS
-scripts/miracle_encounter.gd   # reusable clue->puzzle->miracle controller
+scripts/audio_manager.gd       # ambient bed + intensity ramp + TTS duck
+scripts/miracle_encounter.gd   # clue->puzzle->miracle + cinematic set-pieces
 scripts/city_blockout.gd       # roads, pads, signposts
 scripts/map_markers.gd         # labeled places
 scripts/hud.gd / scenes/ui/hud.tscn
+assets/audio/                  # original OGG loops (+ .b64 companions)
+tools/generate_ambient_music.py
 scenes/miracle_encounter.tscn
 scenes/main.tscn
 docs/ANDROID_EXPORT.md
@@ -102,7 +131,7 @@ See [docs/ANDROID_EXPORT.md](docs/ANDROID_EXPORT.md). Stub `export_presets.cfg` 
 
 ## Roadmap
 
-- Richer set-piece choreography / recorded narration
+- Recorded narration / richer NPC crowds
 - Level 2: Resurrection onward
 - Vehicles + wanted/heat
 - Larger hand-authored map, NPCs, economy
