@@ -69,13 +69,13 @@ V = [196.00, 246.94, 293.66, 392.00]
 chords = [(I, 4), (IV, 4), (V, 4), (I, 4)]
 bed_wav = os.path.join(OUT, "ambient_bed.wav")
 swell_wav = os.path.join(OUT, "ambient_swell.wav")
-write_loop(bed_wav, 32.0, chords, bpm=42, swell=False, master=0.38, pad_amp=0.065)
-write_loop(swell_wav, 32.0, chords, bpm=46, swell=True, master=0.72, pad_amp=0.095)
+write_loop(bed_wav, 8.0, chords, bpm=42, swell=False, master=0.38, pad_amp=0.065)
+write_loop(swell_wav, 8.0, chords, bpm=46, swell=True, master=0.72, pad_amp=0.095)
 for name in ("ambient_bed", "ambient_swell"):
     wav = os.path.join(OUT, name + ".wav")
     ogg = os.path.join(OUT, name + ".ogg")
     if shutil.which("ffmpeg"):
-        subprocess.check_call(["ffmpeg", "-y", "-i", wav, "-c:a", "libvorbis", "-q:a", "2", ogg])
+        subprocess.check_call(["ffmpeg", "-y", "-i", wav, "-c:a", "libvorbis", "-q:a", "0", ogg])
         os.remove(wav)
         with open(ogg, "rb") as f, open(ogg + ".b64", "w") as o:
             import base64
