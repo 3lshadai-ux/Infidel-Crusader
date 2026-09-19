@@ -29,7 +29,6 @@ var _using_procedural: bool = false
 var _proc_bed: AudioStreamGeneratorPlayback = null
 var _proc_swell: AudioStreamGeneratorPlayback = null
 var _proc_phase: float = 0.0
-var _proc_t: float = 0.0
 
 func _ready() -> void:
 	_bed = AudioStreamPlayer.new()
@@ -77,8 +76,7 @@ func _try_load_ogg(ogg_path: String, b64_path: String) -> AudioStream:
 			if bytes.size() > 64 and AudioStreamOggVorbis.has_method("load_from_buffer"):
 				var stream = AudioStreamOggVorbis.load_from_buffer(bytes)
 				if stream:
-					if stream.get("loop") != null:
-						stream.loop = true
+					stream.loop = true
 					return stream
 	return null
 
@@ -111,7 +109,7 @@ func _process(delta: float) -> void:
 	if not _swell.playing:
 		_swell.play()
 	if _using_procedural:
-		_fill_procedural(delta)
+		_fill_procedural()
 
 func _update_intensity_target() -> void:
 	_target_intensity = 0.0
@@ -167,24 +165,17 @@ func _on_encounter_state(_miracle_id: String, new_state: String) -> void:
 func _on_miracle_phase(_miracle_id: String) -> void:
 	_target_intensity = 1.0
 
-func _fill_procedural(_delta: float) -> void:
+func _fill_procedural() -> void:
 	if _proc_bed == null and _bed.get_stream_playback():
 		_proc_bed = _bed.get_stream_playback() as AudioStreamGeneratorPlayback
 	if _proc_swell == null and _swell.get_stream_playback():
 		_proc_swell = _swell.get_stream_playback() as AudioStreamGeneratorPlayback
-	_proc_t += _delta
-	var phase_before := _proc_phase
-	_fill_one(_proc_bed, false, phase_before)
-	_fill_one(_proc_swell, true, phase_before)
+	var frames := 0
 	if _proc_bed:
-		_proc_phase = phase_before + float(_proc_bed.get_frames_available() if false else 0)
-	# advance phase by frames we intended; refill uses shared clock via _proc_phase bump inside
-
-func _fill_one(playback: AudioStreamGeneratorPlayback, swell: bool, phase_start: float) -> void:
-	if playback == null:
-		return
-	var to_fill := playback.get_frames_available()
-	if to_fill <= 0:
+		frames = maxi(frames, _proc_bed.get_frames_available())
+	if _proc_swell:
+		frames = maxi(frames, _proc_swell.get_frames_available())
+	if frames <= 0:
 		return
 	var chords := [
 		[130.81, 164.81, 196.00, 261.63],
@@ -194,9 +185,11 @@ func _fill_one(playback: AudioStreamGeneratorPlayback, swell: bool, phase_start:
 	]
 	var beat := 60.0 / 42.0
 	var rate := 22050.0
-	var phase := phase_start
-	for i in range(to_fill):
-		var t := phase / rate
+	var bed_frames := _proc_bed.get_frames_available() if _proc_bed else 0
+	var swell_frames := _proc_swell.get_frames_available() if _proc_swell else 0
+	var n := maxi(bed_frames, swell_frames)
+	for i in range(n):
+		var t := _proc_phase / rate
 		var ci := int(floor(t / (beat * 4.0))) % 4
 		var freqs: Array = chords[ci]
 		var sample := 0.0
@@ -204,11 +197,13 @@ func _fill_one(playback: AudioStreamGeneratorPlayback, swell: bool, phase_start:
 			var ff: float = float(f)
 			sample += sin(TAU * ff * t) * 0.07
 			sample += sin(TAU * ff * 1.5 * t) * 0.025
-		if swell:
-			sample += sin(TAU * 523.25 * t) * 0.03 * (0.4 + 0.6 * _intensity)
-			sample += sin(TAU * 659.25 * t) * 0.02 * _intensity
-		sample *= 0.55 + 0.2 * _intensity
-		sample = tanh(sample)
-		playback.push_frame(Vector2(sample, sample))
-		phase += 1.0
-	_proc_phase = phase
+		var bed_s := tanh(sample * (0.55 + 0.15 * _intensity))
+		var swell_s := bed_s
+		swell_s += sin(TAU * 523.25 * t) * 0.03 * (0.4 + 0.6 * _intensity)
+		swell_s += sin(TAU * 659.25 * t) * 0.02 * _intensity
+		swell_s = tanh(swell_s)
+		if _proc_bed and i < bed_frames:
+			_proc_bed.push_frame(Vector2(bed_s, bed_s))
+		if _proc_swell and i < swell_frames:
+			_proc_swell.push_frame(Vector2(swell_s, swell_s))
+		_proc_phase += 1.0
