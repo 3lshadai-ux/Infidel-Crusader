@@ -1,1 +1,48 @@
-PLACEHOLDER
+[gd_scene load_steps=8 format=3 uid="uid://bqmain001ic"]
+
+[ext_resource type="Script" path="res://scripts/city_blockout.gd" id="1_city"]
+[ext_resource type="PackedScene" uid="uid://bqplayer001ic" path="res://scenes/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" uid="uid://bqjesus001ic" path="res://scenes/jesus_npc.tscn" id="3_jesus"]
+[ext_resource type="PackedScene" uid="uid://bqhud001ic" path="res://scenes/ui/hud.tscn" id="4_hud"]
+[ext_resource type="Script" path="res://scripts/map_markers.gd" id="5_map"]
+[ext_resource type="PackedScene" uid="uid://bqmirenc001ic" path="res://scenes/miracle_encounter.tscn" id="6_enc"]
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 1
+background_color = Color(0.42, 0.68, 0.92, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.95, 0.88, 0.72, 1)
+ambient_light_energy = 0.62
+tonemap_mode = 2
+tonemap_exposure = 1.08
+adjustment_enabled = true
+adjustment_brightness = 1.02
+adjustment_contrast = 1.14
+adjustment_saturation = 1.28
+
+[node name="Main" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866, -0.354, 0.354, 0, 0.707, 0.707, -0.5, -0.612, 0.612, 0, 20, 0)
+shadow_enabled = true
+light_energy = 1.22
+light_color = Color(1, 0.94, 0.78, 1)
+
+[node name="CityBlockout" type="Node3D" parent="."]
+script = ExtResource("1_city")
+
+[node name="MapMarkers" type="Node3D" parent="."]
+script = ExtResource("5_map")
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.1, 5)
+
+[node name="Jesus" parent="." instance=ExtResource("3_jesus")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.1, 1)
+
+[node name="MiracleEncounter" parent="." instance=ExtResource("6_enc")]
+
+[node name="HUD" parent="." instance=ExtResource("4_hud")]
