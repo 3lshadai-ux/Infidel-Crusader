@@ -1,12 +1,20 @@
 # Infidel Crusader
 
 **Genre:** GTA-like open-world action sandbox for mobile  
-**Engine:** Godot 4.3+ (Android export target)  
-**Status:** Level 1 playable pass — ambient music + cinematic miracle set-pieces (v0.2.1)
+**Engine:** Godot **4.7+** (Android export target)  
+**Status:** Level 1 playable pass — ambient music + cinematic miracle set-pieces (**v0.2.2**)
 
 A stylized, fictional New Testament-era coastal open world. You begin as a **fishmonger** at the market/docks. The opening calling: encounter Jesus, **follow Him**, and become a **Disciple**. Then travel the map for miracles and major story beats.
 
 Tone: respectful of the Gospels inside a sandbox game frame. Title is edgy; content and code stay professional. Fiction/sandbox - no real-world targeting or calls to real violence.
+
+---
+
+## Restore note (v0.2.2)
+
+`scripts/audio_manager.gd` on `main` was briefly overwritten with the literal text `PLACEHOLDER` (commit `14738c1`). It was restored to the full Godot **4.7-safe** ambient script (no `Class.has_method` on native classes; uses `AudioStreamOggVorbis.load_from_buffer`). If your local clone still shows an 11-byte file, run `git pull`.
+
+Also: `miracle_encounter_core.gd` briefly hit a placeholder during the 4.7 pass and was restored with Godot 4.7 method stubs so subclass overrides type-check cleanly.
 
 ---
 
@@ -98,20 +106,23 @@ Scripture strings are **public-domain KJV** only.
 
 ---
 
-## How to open & run (desktop)
+## How to open & run (Godot 4.7)
 
-1. Install [Godot 4.3+](https://godotengine.org/download) (Standard).
-2. Import -> select `project.godot`.
-3. Press **F5**. Main scene: `scenes/main.tscn`.
-4. **Controls:** WASD / arrows; on-screen stick; **E** or **Interact** button; **J** / Journal button.
+1. Install [Godot **4.7+**](https://godotengine.org/download) (Standard), or the [4.7-stable](https://github.com/godotengine/godot/releases/tag/4.7-stable) release.
+2. **`git pull`** the latest `main` (required after the audio_manager restore).
+3. If you previously opened the project in an older Godot: **delete the `.godot/` folder**, then Import → select `project.godot` so assets reimport cleanly.
+4. Press **F5**. Main scene: `scenes/main.tscn`.
+5. **Controls:** WASD / arrows; on-screen stick; **E** / Interact; **J** / Journal (`journal` input action).
+
+Opening tip: start near the shore, walk toward **Jesus**, stay close on the **Follow Me** path until you become a Disciple.
 
 ### Key files
 
 ```
 scripts/game_state.gd          # campaign, clues, puzzles, states, KJV/TTS
-scripts/audio_manager.gd       # ambient bed + intensity ramp + TTS duck
+scripts/audio_manager.gd       # ambient bed + intensity ramp + TTS duck (4.7-safe)
 scripts/miracle_encounter.gd   # interaction layer (extends MiracleEncounterCore)
-scripts/miracle_encounter_core.gd  # stages, lighting, ambience hooks
+scripts/miracle_encounter_core.gd  # stages, lighting, ambience hooks + 4.7 stubs
 scripts/miracle_setpieces.gd   # cinematic stage/FX helpers (class_name)
 scripts/city_blockout.gd       # roads, pads, signposts
 scripts/map_markers.gd         # labeled places
