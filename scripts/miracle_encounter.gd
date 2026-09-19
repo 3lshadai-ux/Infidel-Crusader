@@ -1,84 +1,5 @@
-extends Node3D
-## Reusable MiracleEncounter - clue -> puzzle -> miracle -> done (post follow_me).
-
-const INTERACT_RADIUS: float = 5.5
-const CLUE_NEAR_RADIUS: float = 14.0
-const FILL_JAR_COUNT: int = 6
-
-@onready var beacon: MeshInstance3D = $Beacon
-@onready var label_3d: Label3D = $Label3D
-
-var _player: Node3D = null
-var _player_in_range: bool = false
-var _active_id: String = ""
-var _clue_timer: float = 0.0
-var _watch_elapsed: float = 0.0
-var _watch_required: float = 12.0
-var _jars_filled: int = 0
-var _jar_nodes: Array[Node3D] = []
-var _fx_node: Node3D = null
-var _prompt_shown: bool = false
-
-signal request_puzzle_ui(miracle_id: String, puzzle: Dictionary)
-signal request_clue_ui(miracle_id: String, clues: PackedStringArray)
-signal request_interact_hint(text: String)
-signal clear_interact_hint()
-signal fill_jars_progress(filled: int, total: int)
-signal watch_progress(elapsed: float, required: float)
-
-func _ready() -> void:
-	add_to_group("miracle_encounter")
-	beacon.visible = false
-	label_3d.visible = false
-	GameState.encounter_state_changed.connect(_on_state_changed)
-	GameState.mission_completed.connect(_on_mission_completed)
-	GameState.puzzle_opened.connect(_on_puzzle_opened)
-	GameState.miracle_phase_started.connect(_on_miracle_phase)
-	_refresh_from_state()
-
-func _physics_process(delta: float) -> void:
-	if _player == null:
-		_player = get_tree().get_first_node_in_group("player") as Node3D
-		return
-	var active := GameState.get_active_miracle()
-	if active.is_empty():
-		_hide_beacon()
-		return
-	var mid: String = str(active.get("id", ""))
-	if mid == "follow_me":
-		_hide_beacon()
-		return
-	if mid != _active_id:
-		_setup_for_miracle(active)
-	var state: String = str(active.get("state", "locked"))
-	var dist := global_position.distance_to(_player.global_position)
-	_player_in_range = dist <= INTERACT_RADIUS
-	match state:
-		"clues":
-			_process_clues(delta, dist, mid)
-		"puzzle":
-			_process_puzzle(delta, dist, active)
-		"miracle":
-			_process_miracle(delta, dist, mid)
-	_bob_beacon(delta)
-
-func _setup_for_miracle(m: Dictionary) -> void:
-	_active_id = str(m.get("id", ""))
-	_clue_timer = 0.0
-	_watch_elapsed = 0.0
-	_jars_filled = 0
-	_prompt_shown = false
-	_clear_jars()
-	_clear_fx()
-	var loc: Dictionary = GameState.get_location(str(m.get("location_id", "")))
-	var pos: Vector3 = loc.get("pos", Vector3.ZERO)
-	global_position = pos + Vector3(0, 0, 2.5)
-	beacon.visible = true
-	label_3d.visible = true
-	label_3d.text = str(m.get("name", "Miracle"))
-	_tint_beacon(str(m.get("state", "clues")), bool(m.get("is_major_beat", false)))
-	if _active_id == "water_to_wine":
-		_spawn_waterpots()
+extends MiracleEncounterCore
+## Puzzle / miracle interaction layer for MiracleEncounter.
 
 func _process_clues(delta: float, dist: float, mid: String) -> void:
 	if dist > CLUE_NEAR_RADIUS:
@@ -108,8 +29,9 @@ func _process_puzzle(delta: float, dist: float, m: Dictionary) -> void:
 		if _prompt_shown and ptype != "keep_watch":
 			clear_interact_hint.emit()
 			_prompt_shown = false
-		if ptype == "keep_watch" and _watch_elapsed > 0.0 and dist > INTERACT_RADIUS * 1.8:
+		if ptype == "keep_watch" and _watch_elapsed > 0.0 and dist > INTERACT_RADIUS * WATCH_LEAVE_MULT:
 			_watch_elapsed = 0.0
+			sleep_warning.emit("You drifted away — the disciples sleep. Return and keep watch.")
 			request_interact_hint.emit("You drifted away - return and keep watch.")
 		return
 	match ptype:
@@ -135,6 +57,7 @@ func _process_puzzle(delta: float, dist: float, m: Dictionary) -> void:
 				GameState.complete_puzzle(mid)
 				clear_interact_hint.emit()
 		"keep_watch":
+			clear_sleep_warning.emit()
 			_watch_required = float(puzzle.get("duration", 12.0))
 			_watch_elapsed += delta
 			watch_progress.emit(_watch_elapsed, _watch_required)
@@ -163,7 +86,7 @@ func _try_fill_nearest_jar(mid: String) -> void:
 	if best:
 		best.set_meta("filled", true)
 		_jars_filled += 1
-		_paint_jar_filled(best)
+		MiracleSetpieces.paint_jar_water(best)
 		fill_jars_progress.emit(_jars_filled, FILL_JAR_COUNT)
 		if _jars_filled >= FILL_JAR_COUNT:
 			GameState.complete_puzzle(mid)
@@ -177,7 +100,9 @@ func _process_fill_jars() -> void:
 	if Input.is_action_just_pressed("interact"):
 		_try_fill_nearest_jar(_active_id)
 
-func _process_miracle(_delta: float, dist: float, mid: String) -> void:
+func _process_miracle(delta: float, dist: float, mid: String) -> void:
+	if mid == "transfiguration":
+		_transfig_hold += delta
 	if dist > INTERACT_RADIUS:
 		clear_interact_hint.emit()
 		_prompt_shown = false
@@ -185,8 +110,24 @@ func _process_miracle(_delta: float, dist: float, mid: String) -> void:
 	if not _prompt_shown:
 		_prompt_shown = true
 		_play_miracle_fx(mid)
-	request_interact_hint.emit("Press E / Interact - witness the miracle")
+	if mid == "nets_overflow" and not _nets_participated:
+		request_interact_hint.emit("Press E — let down the net / haul the catch")
+	elif mid == "transfiguration" and _transfig_hold < 2.5:
+		request_interact_hint.emit("Behold the glory... (hold)")
+	else:
+		request_interact_hint.emit("Press E / Interact - witness the miracle")
 	if Input.is_action_just_pressed("interact"):
+		if mid == "nets_overflow" and not _nets_participated:
+			_nets_participated = true
+			_ensure_fx()
+			MiracleSetpieces.fx_nets_catch(_fx_node)
+			request_interact_hint.emit("Press E again - witness the miracle")
+			return
+		if mid == "calm_the_storm":
+			_clear_fx()
+			_ensure_fx()
+			_restore_day()
+			MiracleSetpieces.fx_storm_calm(_fx_node)
 		clear_interact_hint.emit()
 		GameState.participate_miracle(mid)
 
@@ -214,6 +155,11 @@ func _on_miracle_phase(miracle_id: String) -> void:
 
 func _on_mission_completed(_title: String, _reward: int) -> void:
 	_clear_fx()
+	if _active_id == "calm_the_storm":
+		_restore_day()
+	if _active_id == "crucifixion" and not _level1_banner_shown:
+		_level1_banner_shown = true
+		level1_complete.emit()
 	_refresh_from_state()
 
 func _refresh_from_state() -> void:
@@ -221,6 +167,7 @@ func _refresh_from_state() -> void:
 	if active.is_empty() or str(active.get("id", "")) == "follow_me":
 		_hide_beacon()
 		_active_id = ""
+		_clear_stage()
 		return
 	_setup_for_miracle(active)
 
@@ -252,38 +199,12 @@ func _bob_beacon(delta: float) -> void:
 	if beacon and beacon.visible:
 		beacon.rotation.y += delta * 1.2
 		beacon.position.y = 2.6 + sin(Time.get_ticks_msec() * 0.004) * 0.18
-
-func _spawn_waterpots() -> void:
-	_clear_jars()
-	for i in range(FILL_JAR_COUNT):
-		var jar := MeshInstance3D.new()
-		var cyl := CylinderMesh.new()
-		cyl.top_radius = 0.35
-		cyl.bottom_radius = 0.4
-		cyl.height = 0.9
-		jar.mesh = cyl
-		var mat := StandardMaterial3D.new()
-		mat.albedo_color = Color(0.55, 0.5, 0.42)
-		jar.material_override = mat
-		var angle := TAU * float(i) / float(FILL_JAR_COUNT)
-		jar.position = Vector3(cos(angle) * 3.2, 0.45, sin(angle) * 3.2)
-		jar.set_meta("filled", false)
-		add_child(jar)
-		_jar_nodes.append(jar)
-		var lbl := Label3D.new()
-		lbl.text = "Jar %d" % (i + 1)
-		lbl.font_size = 28
-		lbl.position = Vector3(0, 0.7, 0)
-		jar.add_child(lbl)
-
-func _paint_jar_filled(jar: Node3D) -> void:
-	if jar is MeshInstance3D:
-		var mat := StandardMaterial3D.new()
-		mat.albedo_color = Color(0.45, 0.25, 0.55)
-		mat.emission_enabled = true
-		mat.emission = Color(0.5, 0.2, 0.6)
-		mat.emission_energy_multiplier = 0.8
-		(jar as MeshInstance3D).material_override = mat
+	if _fx_node:
+		for c in _fx_node.get_children():
+			if c.has_meta("wind"):
+				c.position.x += float(c.get_meta("spd")) * delta
+				if c.position.x > 8.0:
+					c.position.x = -8.0
 
 func _clear_jars() -> void:
 	for j in _jar_nodes:
@@ -294,90 +215,38 @@ func _clear_jars() -> void:
 
 func _play_miracle_fx(mid: String) -> void:
 	_clear_fx()
-	_fx_node = Node3D.new()
-	_fx_node.name = "MiracleFX"
-	add_child(_fx_node)
+	_ensure_fx()
 	match mid:
 		"water_to_wine":
-			_fx_wine()
+			MiracleSetpieces.fx_wine(_fx_node, _jar_nodes)
 		"nets_overflow":
-			_fx_simple(Color(0.3, 0.55, 0.9))
+			MiracleSetpieces.fx_simple(_fx_node, Color(0.3, 0.55, 0.9))
 		"calm_the_storm":
-			_fx_simple(Color(0.7, 0.85, 1.0))
+			_set_lighting("storm")
+			MiracleSetpieces.spawn_wind(_fx_node)
 		"loaves_and_fish":
-			_fx_simple(Color(0.9, 0.75, 0.35))
+			MiracleSetpieces.fx_loaves(_fx_node)
 		"transfiguration":
-			_fx_transfiguration()
+			_set_lighting("glory")
+			MiracleSetpieces.fx_transfiguration(_fx_node)
 		"gethsemane":
-			_fx_simple(Color(0.4, 0.55, 0.35))
+			_set_lighting("night")
+			MiracleSetpieces.fx_gethsemane(_fx_node)
 		"crucifixion":
-			_fx_crucifixion()
+			_set_lighting("solemn")
+			MiracleSetpieces.fx_crucifixion(_fx_node)
 		_:
-			_fx_simple(Color(1.0, 0.9, 0.5))
-
-func _fx_wine() -> void:
-	for jar in _jar_nodes:
-		_paint_jar_filled(jar)
-	_fx_simple(Color(0.55, 0.15, 0.45))
-
-func _fx_transfiguration() -> void:
-	var light := OmniLight3D.new()
-	light.light_color = Color(1.0, 0.95, 0.7)
-	light.light_energy = 8.0
-	light.omni_range = 18.0
-	light.position = Vector3(0, 4, 0)
-	_fx_node.add_child(light)
-	var sphere := MeshInstance3D.new()
-	var sm := SphereMesh.new()
-	sm.radius = 1.2
-	sm.height = 2.4
-	sphere.mesh = sm
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Color(1, 0.95, 0.7, 0.5)
-	mat.emission_enabled = true
-	mat.emission = Color(1, 0.95, 0.6)
-	mat.emission_energy_multiplier = 4.0
-	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	sphere.material_override = mat
-	sphere.position = Vector3(0, 3.5, 0)
-	_fx_node.add_child(sphere)
-
-func _fx_crucifixion() -> void:
-	var beam := MeshInstance3D.new()
-	var box := BoxMesh.new()
-	box.size = Vector3(0.35, 6.0, 0.35)
-	beam.mesh = box
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Color(0.35, 0.25, 0.18)
-	beam.material_override = mat
-	beam.position = Vector3(0, 3.0, 0)
-	_fx_node.add_child(beam)
-	var cross := MeshInstance3D.new()
-	var box2 := BoxMesh.new()
-	box2.size = Vector3(2.4, 0.3, 0.3)
-	cross.mesh = box2
-	cross.material_override = mat
-	cross.position = Vector3(0, 4.5, 0)
-	_fx_node.add_child(cross)
-	var light := OmniLight3D.new()
-	light.light_color = Color(0.9, 0.7, 0.5)
-	light.light_energy = 3.0
-	light.omni_range = 14.0
-	light.position = Vector3(0, 5, 0)
-	_fx_node.add_child(light)
-
-func _fx_simple(color: Color) -> void:
-	var light := OmniLight3D.new()
-	light.light_color = color
-	light.light_energy = 5.0
-	light.omni_range = 12.0
-	light.position = Vector3(0, 3, 0)
-	_fx_node.add_child(light)
+			MiracleSetpieces.fx_simple(_fx_node, Color(1.0, 0.9, 0.5))
 
 func _clear_fx() -> void:
 	if _fx_node and is_instance_valid(_fx_node):
 		_fx_node.queue_free()
 	_fx_node = null
+
+func _clear_stage() -> void:
+	if _stage_node and is_instance_valid(_stage_node):
+		_stage_node.queue_free()
+	_stage_node = null
 
 func try_interact() -> void:
 	if _player == null:
@@ -408,4 +277,14 @@ func try_interact() -> void:
 			elif ptype == "fill_jars":
 				_process_fill_jars()
 		"miracle":
+			if mid == "nets_overflow" and not _nets_participated:
+				_nets_participated = true
+				_ensure_fx()
+				MiracleSetpieces.fx_nets_catch(_fx_node)
+				return
+			if mid == "calm_the_storm":
+				_clear_fx()
+				_ensure_fx()
+				_restore_day()
+				MiracleSetpieces.fx_storm_calm(_fx_node)
 			GameState.participate_miracle(mid)
